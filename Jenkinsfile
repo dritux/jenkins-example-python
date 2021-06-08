@@ -7,11 +7,15 @@ podTemplate(label: label, containers: [
         stage('Get a Python project') {
             git 'https://github.com/dritux/terraform-kubernetes-jenkins.git'
             container('python') {
-                            stage('Checkout') {
-              steps {
-                checkout scm
-              }
-            }
+                stage('Setup') {
+                  steps {
+                    script {
+                      sh """
+                      pip install -r requirements.txt
+                      """
+                    }
+                  }
+                }
             }
         }
     }
