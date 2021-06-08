@@ -1,29 +1,28 @@
-pipeline {
-    agent { docker { image 'python:3.7.2' } }
-    stages {
-        stage('build') {
-            steps {
-                sh 'python --version'
+def label = "mypod-${UUID.randomUUID().toString()}"
+
+podTemplate(label: label, containers: [
+    containerTemplate(name: 'python', image: 'python:3.7-alpine', ttyEnabled: true, command: 'cat'),
+]) {
+    node(label) {
+        stages { 
+            stage('Checkout') {
+              steps {
+                checkout scm
+              }
             }
-        }
-        stage('STAGE 00'){
-            steps{
-                echo "Pipeline Usando Jenkinsfile"
+            stage('Setup') {
+              steps {
+                script {
+                  sh """
+                  pip install -r requirements.txt
+                  """
+                }
+              }
             }
-        }
-        stage('STAGE 01'){
-            steps{
-                echo "Pipeline Usando Jenkinsfile"
-            }
-        }
-        stage('build'){
-            steps{
-                sh 'pip install -r requirements.txt'
-            }
-        }
-        stage('test'){
-            steps{
-                sh 'python test.py'
+            stage('Test a Python project') {
+                steps{
+                    sh 'python test.py'
+                }
             }
         }
     }
