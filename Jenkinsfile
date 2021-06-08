@@ -16,6 +16,12 @@ podTemplate(label: label, containers: [
                         """
                     }
                 }
+                stage('Setup Tests') {
+                    checkout scm
+                    container('python') {
+                        sh "python test.py"
+                    }
+                }
             }
         }
     }
