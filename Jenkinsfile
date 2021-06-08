@@ -4,25 +4,14 @@ podTemplate(label: label, containers: [
     containerTemplate(name: 'python', image: 'python:3.7-alpine', ttyEnabled: true, command: 'cat'),
 ]) {
     node(label) {
-        stages { 
-            stage('Checkout') {
+        stage('Get a Python project') {
+            git 'https://github.com/dritux/terraform-kubernetes-jenkins.git'
+            container('python') {
+                            stage('Checkout') {
               steps {
                 checkout scm
               }
             }
-            stage('Setup') {
-              steps {
-                script {
-                  sh """
-                  pip install -r requirements.txt
-                  """
-                }
-              }
-            }
-            stage('Test a Python project') {
-                steps{
-                    sh 'python test.py'
-                }
             }
         }
     }
