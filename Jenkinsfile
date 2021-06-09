@@ -35,7 +35,7 @@ podTemplate(
         }
         stage('Build image') {
             container('docker') {
-                docker.withRegistry('https://us.gcr.io', 'gcr:jenkins') {
+                docker.withRegistry('https://us.gcr.io', 'jenkins-admin') {
                     app = docker.build("us.gcr.io/fs-phone-diagnostics", "-f Dockerfile .")
                     app.push("${env.BUILD_NUMBER}")
                     app.push("latest")
