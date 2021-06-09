@@ -27,8 +27,14 @@ podTemplate(
 
             }
         }
-        stage('Container Register') {
-            
+        stage('Build image') {
+            app = docker.build("us.gcr.io/fs-phone-diagnostics")
+        }
+        stage('Push image') {
+          docker.withRegistry('https://us.gcr.io', 'gcr:fs-phone-diagnostics') {
+            app.push("${env.BUILD_NUMBER}")
+            app.push("latest")
+          }
         }
     }
 }
