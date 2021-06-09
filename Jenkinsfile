@@ -4,7 +4,16 @@ podTemplate(
     label: label, 
     containers: [
         containerTemplate(name: 'python', image: 'python:3.7-alpine', ttyEnabled: true, command: 'cat'),
-        containerTemplate(
+            containerTemplate(
+                name: 'docker-dind',
+                image: 'docker:19-dind',
+                alwaysPullImage: true,
+                privileged: true,
+                envVars: [
+                    envVar(key: 'DOCKER_TLS_CERTDIR', value: '')
+                ],
+            ),
+            containerTemplate(
                 name: 'docker',
                 image: 'docker:19',
                 alwaysPullImage: true,
