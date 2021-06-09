@@ -4,12 +4,6 @@ podTemplate(
     label: label, 
     containers: [
         containerTemplate(name: 'python', image: 'python:3.7-alpine', ttyEnabled: true, command: 'cat'),
-        containerTemplate(name: 'docker',
-            command: '/bin/cat -',
-            image: 'docker:18.06.1-ce',
-            resourceLimitCpu: '1000m',
-            resourceLimitMemory: '1000Mi',
-            ttyEnabled: true),
     ]) {
     node(label) {
         stage('Get a Python project') {
@@ -35,17 +29,10 @@ podTemplate(
         }
         stage('Build image') {
             container('docker') {
-
-                stage("docker build"){
-                    Img = docker.build(
-                        "fs-phone-diagnostics/example:${env.BUILD_NUMBER}",
-                        "-f Dockerfile ."
-                    )
-                }
-                stage("docker push") {
-                    docker.withRegistry('https://gcr.io', "gcr:fs-phone-diagnostics") {
-                        Img.push(${env.BUILD_NUMBER})
-                    }
+                docker.withRegistry('https://us.gcr.io', 'gcr:fs-phone-diagnostics') {
+                    app = docker.build("us.gcr.io/fs-phone-diagnostics/example", "-f Dockerfile .")
+                    app.push("${env.BUILD_NUMBER}")
+                    app.push("latest")
                 }
             }
         }
