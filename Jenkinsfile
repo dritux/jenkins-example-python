@@ -1,8 +1,10 @@
 def label = "mypod-${UUID.randomUUID().toString()}"
 
-podTemplate(label: label, containers: [
-    containerTemplate(name: 'python', image: 'python:3.7-alpine', ttyEnabled: true, command: 'cat'),
-]) {
+podTemplate(
+    label: label, 
+    containers: [
+        containerTemplate(name: 'python', image: 'python:3.7-alpine', ttyEnabled: true, command: 'cat')
+    ]) {
     node(label) {
         stage('Get a Python project') {
             git 'https://github.com/dritux/terraform-kubernetes-jenkins.git'
@@ -22,9 +24,11 @@ podTemplate(label: label, containers: [
                         sh "python test.py"
                     }
                 }
+
             }
+        }
+        stage('Container Register') {
+            
         }
     }
 }
-
-
