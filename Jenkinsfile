@@ -4,7 +4,16 @@ podTemplate(
     label: label, 
     containers: [
         containerTemplate(name: 'python', image: 'python:3.7-alpine', ttyEnabled: true, command: 'cat'),
-        containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true)
+        containerTemplate(
+                name: 'docker',
+                image: 'docker:19',
+                alwaysPullImage: true,
+                ttyEnabled: true,
+                command: 'cat',
+                envVars: [
+                    envVar(key: 'DOCKER_HOST', value: 'tcp://localhost:2375')
+                ],
+            ),
     ]) {
     node(label) {
         stage('Get a Python project') {
