@@ -36,7 +36,7 @@ podTemplate(
         stage('Build image') {
             container('docker') {
                 docker.withRegistry('https://us.gcr.io', 'gcr:fs-phone-diagnostics') {
-                    app = docker.build("us.gcr.io/fs-phone-diagnostics", "-f Dockerfile .")
+                    app = docker.build("us.gcr.io/fs-phone-diagnostics/example", "-f Dockerfile .")
                     app.push("${env.BUILD_NUMBER}")
                     app.push("latest")
                 }
