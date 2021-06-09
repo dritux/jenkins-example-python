@@ -5,9 +5,9 @@ podTemplate(
     containers: [
         containerTemplate(name: 'python', image: 'python:3.7-alpine', ttyEnabled: true, command: 'cat'),
         containerTemplate(
-        name: 'docker'
-        image: 'docker:1.11'
-        ttyEnabled: true
+        name: 'docker',
+        image: 'docker:1.11',
+        ttyEnabled: true,
         command: 'cat'
       )
     ]) {
