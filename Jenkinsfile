@@ -4,6 +4,12 @@ podTemplate(
     label: label, 
     containers: [
         containerTemplate(name: 'python', image: 'python:3.7-alpine', ttyEnabled: true, command: 'cat'),
+        containerTemplate(
+        name: 'docker'
+        image: 'docker:1.11'
+        ttyEnabled: true
+        command: 'cat'
+      )
     ]) {
     node(label) {
         stage('Get a Python project') {
@@ -29,10 +35,22 @@ podTemplate(
         }
         stage('Build image') {
             container('docker') {
-                docker.withRegistry('https://us.gcr.io', 'gcr:fs-phone-diagnostics') {
-                    app = docker.build("us.gcr.io/fs-phone-diagnostics/example", "-f Dockerfile .")
-                    app.push("${env.BUILD_NUMBER}")
-                    app.push("latest")
+
+                stage('Building image') {
+                  steps{
+                    script {
+                      app = docker.build("us.gcr.io/fs-phone-diagnostics/example", "-f Dockerfile .")
+                    }
+                  }
+                }
+                stage('Push Image to registry') {
+                  steps{
+                    script{
+                      withDockerRegistry(credentialsId: 'gcr:fs-phone-diagnostics', url: 'http://gcr.io/fs-phone-diagnostics/') {
+                        app.push()
+                      }
+                    }
+                  }
                 }
             }
         }
