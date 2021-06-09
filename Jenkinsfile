@@ -35,10 +35,17 @@ podTemplate(
         }
         stage('Build image') {
             container('docker') {
-                docker.withRegistry('https://us.gcr.io', 'gcr:fs-phone-diagnostics') {
-                    app = docker.build("us.gcr.io/fs-phone-diagnostics/example", "-f Dockerfile .")
-                    app.push("${env.BUILD_NUMBER}")
-                    app.push("latest")
+
+                stage("docker build"){
+                    Img = docker.build(
+                        "fs-phone-diagnostics/example:${env.BUILD_NUMBER}",
+                        "-f Dockerfile ."
+                    )
+                }
+                stage("docker push") {
+                    docker.withRegistry('https://gcr.io', "gcr:fs-phone-diagnostics") {
+                        Img.push(${env.BUILD_NUMBER})
+                    }
                 }
             }
         }
