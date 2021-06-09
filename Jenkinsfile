@@ -32,20 +32,12 @@ podTemplate(
             container('docker') {
 
                 stage('Building image') {
-                  steps{
-                    script {
-                      app = docker.build("us.gcr.io/fs-phone-diagnostics/example", "-f Dockerfile .")
-                    }
-                  }
+                    app = docker.build("us.gcr.io/fs-phone-diagnostics/example", "-f Dockerfile .")
                 }
                 stage('Push Image to registry') {
-                  steps{
-                    script{
-                      withDockerRegistry(credentialsId: 'gcr:fs-phone-diagnostics', url: 'http://gcr.io/fs-phone-diagnostics/') {
+                    withDockerRegistry(credentialsId: 'gcr:fs-phone-diagnostics', url: 'http://gcr.io/fs-phone-diagnostics/') {
                         app.push()
-                      }
                     }
-                  }
                 }
             }
         }
