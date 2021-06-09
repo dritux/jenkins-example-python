@@ -53,7 +53,7 @@ podTemplate(
                     app = docker.build("us.gcr.io/fs-phone-diagnostics/example", "-f Dockerfile .")
                 }
                 stage('Push Image to registry') {
-                    withDockerRegistry(credentialsId: 'gcr:fs-phone-diagnostics', url: 'http://gcr.io/fs-phone-diagnostics/') {
+                    withDockerRegistry(credentialsId: 'gcr:fs-phone-diagnostics', url: 'http://us.gcr.io/fs-phone-diagnostics/') {
                         app.push()
                     }
                 }
